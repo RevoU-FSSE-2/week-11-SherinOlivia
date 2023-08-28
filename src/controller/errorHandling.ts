@@ -8,7 +8,6 @@ export const errorHandling = function (data: any, error: any) {
             error: error
         }
     }
-
     return {
         success: true,
         data: data
