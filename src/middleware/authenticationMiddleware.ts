@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import jwt, { Secret } from "jsonwebtoken";
 import JWT_TOKEN from "../config/jwtConfig";
 import { RoleReq, RoleJWT } from "../type/interface";
 
-const authenMiddleware = (req: RoleReq, res: Response, next: NextFunction) => {
+const authenMiddleware: any = (req: RoleReq, res: Response, next: NextFunction) => {
     const authen = req.headers.authorization
 
 
