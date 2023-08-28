@@ -21,7 +21,7 @@ My Theme of choice: simple web app to track orders and inventory
 
 ## Planning: Diagram
 
-![diagram-plan]()
+![diagram-plan](https://raw.githubusercontent.com/RevoU-FSSE-2/week-11-SherinOlivia/main/documentation/Project%20Milestone%202.webp)
 
 ### Contact Me:
 
