@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 require("dotenv/config");
 const dbConnection_1 = require("./config/dbConnection");
+const adminConfig_1 = __importDefault(require("./config/adminConfig"));
+const mainRouter_1 = __importDefault(require("./router/mainRouter"));
 const app = (0, express_1.default)();
 const port = process.env.PORT;
 app.use(express_1.default.json());
@@ -26,8 +28,10 @@ dbConnection_1.DBLocal.connect(function () {
         console.log("Localhost Connection Failed");
     }
 });
+// insert Super User / Admin account to Database.. (One time Use)
+(0, adminConfig_1.default)();
 // router
-// app.use(router)
+app.use(mainRouter_1.default);
 app.listen(port, () => {
     console.log(`Server is running on port:${port}`);
 });
