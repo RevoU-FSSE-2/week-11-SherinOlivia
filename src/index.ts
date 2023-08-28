@@ -1,10 +1,11 @@
-import express from 'express';
+import express, {Request, Response} from 'express';
 import 'dotenv/config';
 import { DBLocal } from './config/dbConnection';
+import insertAdmin from './config/adminConfig';
+import router from './router/mainRouter';
 
 const app = express()
 const port = process.env.PORT;
-
 
 app.use(express.json())
 
@@ -26,8 +27,11 @@ DBLocal.connect( function () {
     }
 })
 
+// insert Super User / Admin account to Database.. (One time Use)
+insertAdmin();
+
 // router
-// app.use(router)
+app.use(router)
 
 app.listen(port, () => {
   console.log(`Server is running on port:${port}`)
