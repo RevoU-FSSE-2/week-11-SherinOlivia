@@ -15,8 +15,8 @@ import authorMiddleware from '../middleware/authorizationMiddleware'
 // Create new Order
 // orderrouter.post('/new', ordersController.createNewOrder);
 
-// Update Order status (Completed / Cancelled) ===> Staff & Admin Only!
-// orderrouter.patch('/update', authorMiddleware({ roles: ['staff', 'admin'] }), ordersController.updateOrder);
+// Update Order status by id (Completed / Cancelled) ===> Staff & Admin Only!
+// orderrouter.patch('/update/:id', authorMiddleware({ roles: ['staff', 'admin'] }), ordersController.updateOrder);
 
 // Get All Completed Order 
 // orderrouter.get('/completed', ordersController.getCompletedOrder);
