@@ -12,11 +12,11 @@ const insertAdmin = async (req?: Request, res?: Response) => {
             const adminPass = process.env.ADMIN_PASS;
             const hashedPass = await bcrypt.hash(adminPass!, 10);
             
-        await DBLocal.promise().query(`INSERT INTO week11Milestone2.users (username, password, role) VALUES ('${adminUsername}', '${hashedPass}', 'admin')`)
+        await DBLocal.query(`INSERT INTO week11Milestone2.users (username, password, role) VALUES ('${adminUsername}', '${hashedPass}', 'admin')`)
         console.log("Admin Account successfully created! Welcome!");    
     } else {
-        console.error("Errorr!! Admin already exists");
-        }
+        console.error("Reminder: Admin already exists");
+    }
     } catch (error) {
         console.error("Errorr!! Can't input Admin data");
     }
