@@ -1,10 +1,10 @@
-import express, {Request, Response} from 'express';
+import express, {Express} from 'express';
 import 'dotenv/config';
 import { DBLocal } from './config/dbConnection';
 import insertAdmin from './config/adminConfig';
 import router from './router/mainRouter';
 
-const app = express()
+const app: Express = express()
 const port = process.env.PORT;
 
 app.use(express.json())
