@@ -15,6 +15,7 @@ const authenMiddleware = (req, res, next) => {
         try {
             const decodedToken = jsonwebtoken_1.default.verify(secretToken, jwtConfig_1.default);
             console.log(decodedToken, `==== User's Decoded Data`);
+            req.user = decodedToken;
             req.role = decodedToken.role;
             next();
         }

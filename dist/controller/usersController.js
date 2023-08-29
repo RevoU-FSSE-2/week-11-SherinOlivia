@@ -22,16 +22,18 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     try {
         const { username, password, role } = req.body;
         const hashedPass = yield bcrypt_1.default.hash(password, 10);
-        const dbUser = yield dbConnection_1.DBLocal.promise().query(`INSERT INTO week11Milestone2.users (username, password, role) VALUE (${username}, ${hashedPass})`);
-        const existedUser = yield dbConnection_1.DBLocal.promise().query(`SELECT * FROM week11Milestone2.users WHERE username = ${username}`);
-        if (existedUser) {
-            res.status(400).json((0, errorHandling_1.errorHandling)(null, "Username already exist...!!"));
+        const [existingUser] = yield dbConnection_1.DBLocal.promise().query(`SELECT * FROM week11Milestone2.users WHERE username = ?`, [username]);
+        if (existingUser.length === 0) {
+            const newUser = yield dbConnection_1.DBLocal.promise().query(`INSERT INTO week11Milestone2.users (username, password, role) VALUES (?, ?, ?)`, [username, hashedPass, 'cust']);
+            res.status(200).json((0, errorHandling_1.errorHandling)(newUser, null));
         }
         else {
-            res.status(200).json((0, errorHandling_1.errorHandling)({ id: dbUser[0].insertId, dbUser }, null));
+            res.status(400).json((0, errorHandling_1.errorHandling)(null, "Username already exist...!!"));
+            return;
         }
     }
     catch (error) {
+        console.error(error);
         res.status(500).json((0, errorHandling_1.errorHandling)(null, "Register User Failed..!! Internal Error!"));
     }
 });
@@ -39,21 +41,24 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { username, password } = req.body;
-        const existedUser = yield dbConnection_1.DBLocal.promise().query(`SELECT * FROM week11Milestone2.users WHERE username = ${username}`);
-        const passwordCheck = yield bcrypt_1.default.compare(password, existedUser[0].password);
+        const existingUser = yield dbConnection_1.DBLocal.promise().query("SELECT * FROM week11Milestone2.users WHERE username = ?", [username]);
+        const user = existingUser[0][0];
+        console.log(user, "password:", user.password);
+        const passwordCheck = yield bcrypt_1.default.compare(password, user.password);
         if (passwordCheck) {
-            const token = jsonwebtoken_1.default.sign({ username: existedUser[0].username, id: existedUser[0].id, role: existedUser[0].role }, jwtConfig_1.default);
+            const token = jsonwebtoken_1.default.sign({ username: user.username, id: user.id, role: user.role }, jwtConfig_1.default);
             res.status(200).json((0, errorHandling_1.errorHandling)({
-                message: `${existedUser[0].username} Successfully logged in as ${existedUser[0].role}`,
+                message: `${user.username} Successfully logged in as ${user.role}`,
                 data: token
             }, null));
         }
         else {
-            res.status(400).json((0, errorHandling_1.errorHandling)(null, "Wrong Username or Password...!! Please Try Again..!!"));
+            res.status(400).json((0, errorHandling_1.errorHandling)('Password is incorrect', null));
         }
     }
     catch (error) {
-        res.status(500).json((0, errorHandling_1.errorHandling)(null, "Login Failed..!! Internal Error!"));
+        console.error(error);
+        res.status(500).json((0, errorHandling_1.errorHandling)('Cannot Connect!! Internal Error!', null));
     }
 });
 // Get All User data (Cust, Staff, Admin) ===> Admin Only!
@@ -79,9 +84,9 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const { name, address } = req.body;
         if ((role !== "staff" && role !== "admin") && username === checkUsername) {
             const updateData = yield dbConnection_1.DBLocal.promise().query(`
-            UPDATE week11Milestone2.users
-            SET name = ${name}, address = ${address}
-            WHERE username = ${username}`);
+                UPDATE week11Milestone2.users
+                SET name = ?, address = ?
+                WHERE username = ?`, [name, address, username]);
             res.status(200).json((0, errorHandling_1.errorHandling)({
                 message: "User Data Updated Successfully",
                 data: updateData
@@ -89,9 +94,9 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         }
         else if (role == "staff" || role == "admin") {
             const updateData = yield dbConnection_1.DBLocal.promise().query(`
-            UPDATE week11Milestone2.users
-            SET name = ${name}, address = ${address}
-            WHERE username = ${username}`);
+                UPDATE week11Milestone2.users
+                SET name = ?, address = ?
+                WHERE username = ?`, [name, address, username]);
             res.status(200).json((0, errorHandling_1.errorHandling)({
                 message: "User Data Updated Successfully",
                 data: updateData
@@ -99,6 +104,7 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         }
     }
     catch (error) {
+        console.error(error);
         res.status(500).json((0, errorHandling_1.errorHandling)(null, "User Data Update Failed...!!"));
     }
 });

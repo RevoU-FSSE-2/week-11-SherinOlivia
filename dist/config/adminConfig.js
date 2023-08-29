@@ -22,11 +22,11 @@ const insertAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             const adminUsername = process.env.ADMIN_USERNAME;
             const adminPass = process.env.ADMIN_PASS;
             const hashedPass = yield bcrypt_1.default.hash(adminPass, 10);
-            yield dbConnection_1.DBLocal.promise().query(`INSERT INTO week11Milestone2.users (username, password, role) VALUES ('${adminUsername}', '${hashedPass}', 'admin')`);
+            yield dbConnection_1.DBLocal.query(`INSERT INTO week11Milestone2.users (username, password, role) VALUES ('${adminUsername}', '${hashedPass}', 'admin')`);
             console.log("Admin Account successfully created! Welcome!");
         }
         else {
-            console.error("Errorr!! Admin already exists");
+            console.error("Reminder: Admin already exists");
         }
     }
     catch (error) {

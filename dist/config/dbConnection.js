@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DBLocal = void 0;
 const mysql2_1 = __importDefault(require("mysql2"));
 const dbConfig_1 = require("./dbConfig");
+require("dotenv/config");
 // railway
 // export const DB = mysql.createConnection(`${DBConfig.URL}`)
 // local

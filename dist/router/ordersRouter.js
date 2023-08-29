@@ -13,8 +13,8 @@ const orderrouter = express_1.default.Router();
 // orderrouter.get('/:id', authorMiddleware({ roles: ['staff', 'admin'] }), ordersController.getOneOrder);
 // Create new Order
 // orderrouter.post('/new', ordersController.createNewOrder);
-// Update Order status (Completed / Cancelled) ===> Staff & Admin Only!
-// orderrouter.patch('/update', authorMiddleware({ roles: ['staff', 'admin'] }), ordersController.updateOrder);
+// Update Order status by id (Completed / Cancelled) ===> Staff & Admin Only!
+// orderrouter.patch('/update/:id', authorMiddleware({ roles: ['staff', 'admin'] }), ordersController.updateOrder);
 // Get All Completed Order 
 // orderrouter.get('/completed', ordersController.getCompletedOrder);
 // Get All Completed Order  ===> Staff & Admin Only!

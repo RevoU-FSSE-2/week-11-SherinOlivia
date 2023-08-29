@@ -13,15 +13,15 @@ userrouter.post('/register', usersController_1.default.registerUser);
 // Login Account
 userrouter.post('/login', usersController_1.default.loginUser);
 // Get All User data (Cust, Staff, Admin) ===> Admin Only!
-userrouter.get('/', authenticationMiddleware_1.default, (0, authorizationMiddleware_1.default)({ roles: ['admin'] }), usersController_1.default.getAllUser);
+userrouter.get('/', authenticationMiddleware_1.default, (0, authorizationMiddleware_1.default)(['admin']), usersController_1.default.getAllUser);
 // Get All Cust Data (Cust) ===> Staff & Admin Only!
-// userrouter.get('/cust', authenMiddleware, authorMiddleware({ roles: ['staff', 'admin'] }), usersController.getAllCust);
+// userrouter.get('/cust', authenMiddleware, authorMiddleware(['staff','admin']), usersController.getAllCust);
 // Get All Staff Data (Staff) ===> Staff & Admin Only!
-// userrouter.get('/staff', authenMiddleware, authorMiddleware({ roles: ['staff', 'admin'] }), usersController.getAllStaff);
+// userrouter.get('/staff', authenMiddleware, authorMiddleware(['staff','admin']), usersController.getAllStaff);
 // Get One Cust Data (Cust) ===> Staff & Admin Only!
-// userrouter.get('/cust/:id', authenMiddleware, authorMiddleware({ roles: ['staff', 'admin'] }), usersController.getOneCust);
+// userrouter.get('/cust/:id', authenMiddleware, authorMiddleware(['staff','admin']), usersController.getOneCust);
 // Get One Staff Data (Staff) ===> Staff & Admin Only!
-// userrouter.get('/staff/:id', authenMiddleware, authorMiddleware({ roles: ['staff', 'admin'] }), usersController.getOneStaff);
+// userrouter.get('/staff/:id', authenMiddleware, authorMiddleware(['staff','admin']), usersController.getOneStaff);
 // Patch/Update name & address
-userrouter.patch('/update/:username', authenticationMiddleware_1.default, (0, authorizationMiddleware_1.default)({ roles: ['cust', 'staff', 'admin'] }), usersController_1.default.updateUser);
+userrouter.patch('/update/:username', authenticationMiddleware_1.default, (0, authorizationMiddleware_1.default)(['cust', 'staff', 'admin']), usersController_1.default.updateUser);
 exports.default = userrouter;
