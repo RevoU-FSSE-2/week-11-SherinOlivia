@@ -11,21 +11,21 @@ userrouter.post('/register', usersController.registerUser);
 userrouter.post('/login', usersController.loginUser);
 
 // Get All User data (Cust, Staff, Admin) ===> Admin Only!
-userrouter.get('/', authenMiddleware, authorMiddleware({ roles: ['admin'] }), usersController.getAllUser);
+userrouter.get('/', authenMiddleware, authorMiddleware(['admin']), usersController.getAllUser);
 
 // Get All Cust Data (Cust) ===> Staff & Admin Only!
-// userrouter.get('/cust', authenMiddleware, authorMiddleware({ roles: ['staff', 'admin'] }), usersController.getAllCust);
+// userrouter.get('/cust', authenMiddleware, authorMiddleware(['staff','admin']), usersController.getAllCust);
 
 // Get All Staff Data (Staff) ===> Staff & Admin Only!
-// userrouter.get('/staff', authenMiddleware, authorMiddleware({ roles: ['staff', 'admin'] }), usersController.getAllStaff);
+// userrouter.get('/staff', authenMiddleware, authorMiddleware(['staff','admin']), usersController.getAllStaff);
 
 // Get One Cust Data (Cust) ===> Staff & Admin Only!
-// userrouter.get('/cust/:id', authenMiddleware, authorMiddleware({ roles: ['staff', 'admin'] }), usersController.getOneCust);
+// userrouter.get('/cust/:id', authenMiddleware, authorMiddleware(['staff','admin']), usersController.getOneCust);
 
 // Get One Staff Data (Staff) ===> Staff & Admin Only!
-// userrouter.get('/staff/:id', authenMiddleware, authorMiddleware({ roles: ['staff', 'admin'] }), usersController.getOneStaff);
+// userrouter.get('/staff/:id', authenMiddleware, authorMiddleware(['staff','admin']), usersController.getOneStaff);
 
 // Patch/Update name & address
-userrouter.patch('/update/:username', authenMiddleware, authorMiddleware({ roles: ['cust', 'staff', 'admin'] }), usersController.updateUser);
+userrouter.patch('/update/:username', authenMiddleware, authorMiddleware(['cust','staff','admin']), usersController.updateUser);
 
 export default userrouter
