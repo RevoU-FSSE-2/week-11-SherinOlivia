@@ -1,5 +1,6 @@
 import mysql from 'mysql2'
 import { DBConfig, DBConfigLocal } from './dbConfig'
+import 'dotenv/config'
 
 // railway
 // export const DB = mysql.createConnection(`${DBConfig.URL}`)
