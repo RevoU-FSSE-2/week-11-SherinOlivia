@@ -1,6 +1,7 @@
-import { DBLocal } from "../config/dbConnection"
+import { DBLocal } from '../config/dbConnection';
+import { QueryError } from 'mysql2';
 
-
+// Error Handling
 export const errorHandling = function (data: any, error: any) {
     if (error) {
         return {
@@ -8,20 +9,21 @@ export const errorHandling = function (data: any, error: any) {
             error: error
         }
     }
+
     return {
         success: true,
         data: data
     }
 }
 
-export const query = (query: string, values: any) => {
-    return new Promise((resolve, reject) => {
-        DBLocal.query(query, values, (err, result, fields) => {
-            if (err) {
-                reject(err)
-            } else {
-                resolve(result)
-            }
-        })
-    })
-}
+// export const query = (query: string, values: any) => {
+//     return new Promise((resolve, reject) => {
+//         DBLocal.query(query, values, (err: QueryError, result: any) => {
+//             if (err) {
+//                 reject(err);
+//             } else {
+//                 resolve(result);
+//             }
+//         });
+//     });
+// };

@@ -1,8 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import { RoleReq } from "../type/interface";
+import { Response, NextFunction } from "express";
 
-
-const authorMiddleware: any = (roles: string[]) => (req: RoleReq, res: Response, next: NextFunction) => {
+const authorMiddleware= (roles: string[]) => (req: any, res: Response, next: NextFunction) => {
 
     if (!roles.includes(req.role)) {
         return res.status(401).json({ message: "Unauthorized Access!" })
