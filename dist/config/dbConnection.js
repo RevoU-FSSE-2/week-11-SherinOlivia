@@ -8,7 +8,13 @@ const mysql2_1 = __importDefault(require("mysql2"));
 const dbConfig_1 = require("./dbConfig");
 require("dotenv/config");
 // railway
-exports.DB = mysql2_1.default.createConnection(`${dbConfig_1.DBConfig.URL}`);
+exports.DB = mysql2_1.default.createConnection({
+    host: dbConfig_1.DBConfig.HOST,
+    user: dbConfig_1.DBConfig.USER,
+    password: dbConfig_1.DBConfig.PASSWORD,
+    database: dbConfig_1.DBConfig.DATABASE,
+    port: +dbConfig_1.DBConfig.PORT
+});
 // local
 exports.DBLocal = mysql2_1.default.createConnection({
     host: dbConfig_1.DBConfigLocal.HOST,
