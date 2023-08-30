@@ -21,15 +21,16 @@ dbConnection_1.DB.connect(function () {
     }
 }),
     // DB Connection (Local)
-    // DBLocal.connect( function () {
-    //     if (DBLocal) {
-    //         console.log("Localhost Connection Succeed");
-    //     } else {
-    //         console.log("Localhost Connection Failed");
-    //     }
-    // })
-    // insert Super User / Admin account to Database.. (One time Use)
-    (0, adminConfig_1.default)();
+    dbConnection_1.DBLocal.connect(function () {
+        if (dbConnection_1.DBLocal) {
+            console.log("Localhost Connection Succeed");
+        }
+        else {
+            console.log("Localhost Connection Failed");
+        }
+    });
+// insert Super User / Admin account to Database.. (One time Use)
+(0, adminConfig_1.default)();
 // router
 app.use(mainRouter_1.default);
 app.listen(port, () => {

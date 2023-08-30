@@ -1,6 +1,6 @@
 import express, {Express} from 'express';
 import 'dotenv/config';
-import { DB } from './config/dbConnection';
+import { DB, DBLocal } from './config/dbConnection';
 import insertAdmin from './config/adminConfig';
 import router from './router/mainRouter';
 
@@ -19,13 +19,13 @@ DB.connect( function () {
 }),
 
 // DB Connection (Local)
-// DBLocal.connect( function () {
-//     if (DBLocal) {
-//         console.log("Localhost Connection Succeed");
-//     } else {
-//         console.log("Localhost Connection Failed");
-//     }
-// })
+DBLocal.connect( function () {
+    if (DBLocal) {
+        console.log("Localhost Connection Succeed");
+    } else {
+        console.log("Localhost Connection Failed");
+    }
+})
 
 // insert Super User / Admin account to Database.. (One time Use)
 insertAdmin();
