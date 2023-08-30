@@ -15,10 +15,10 @@ const errorHandling_1 = require("./errorHandling");
 const createNewProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, qty, price } = req.body;
-        const [existingProduct] = yield dbConnection_1.DBLocal.promise().query(`SELECT * FROM week11Milestone2.products WHERE name = ?`, [name]);
+        const [existingProduct] = yield dbConnection_1.DB.promise().query(`SELECT * FROM railway.products WHERE name = ?`, [name]);
         if (existingProduct.length === 0) {
-            yield dbConnection_1.DBLocal.promise().query(`INSERT INTO week11Milestone2.products (name, qty, price) VALUES (?, ?, ?)`, [name, qty, price]);
-            const [newProduct] = yield dbConnection_1.DBLocal.promise().query(`SELECT * FROM week11Milestone2.products WHERE name = ?`, [name]);
+            yield dbConnection_1.DB.promise().query(`INSERT INTO railway.products (name, qty, price) VALUES (?, ?, ?)`, [name, qty, price]);
+            const [newProduct] = yield dbConnection_1.DB.promise().query(`SELECT * FROM railway.products WHERE name = ?`, [name]);
             res.status(200).json((0, errorHandling_1.errorHandling)(newProduct, null));
         }
         else {
@@ -36,13 +36,13 @@ const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     try {
         const name = req.params.name;
         const { qty, price } = req.body;
-        const [existingProduct] = yield dbConnection_1.DBLocal.promise().query(`SELECT * FROM week11Milestone2.products WHERE name = ?`, [name]);
+        const [existingProduct] = yield dbConnection_1.DB.promise().query(`SELECT * FROM railway.products WHERE name = ?`, [name]);
         if (existingProduct.length === 0) {
             res.status(400).json((0, errorHandling_1.errorHandling)(null, "Product doesn't exist...!!"));
             return;
         }
         else {
-            yield dbConnection_1.DBLocal.promise().query(`UPDATE week11Milestone2.products SET qty = ?, price = ? WHERE name = ?`, [qty, price, name]);
+            yield dbConnection_1.DB.promise().query(`UPDATE railway.products SET qty = ?, price = ? WHERE name = ?`, [qty, price, name]);
             res.status(200).json((0, errorHandling_1.errorHandling)(existingProduct, null));
         }
     }
@@ -54,7 +54,7 @@ const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 //  get all Product Data
 const getAllProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const getAllProduct = yield dbConnection_1.DBLocal.promise().query(`SELECT * FROM week11Milestone2.products`);
+        const getAllProduct = yield dbConnection_1.DB.promise().query(`SELECT * FROM railway.products`);
         if (getAllProduct.length === 0) {
             res.status(400).json((0, errorHandling_1.errorHandling)(null, "Product doesn't exist...!!"));
             return;
@@ -72,7 +72,7 @@ const getAllProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 const getOneProductName = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const name = req.params.name;
-        const [getOneProduct] = yield dbConnection_1.DBLocal.promise().query(`SELECT * FROM week11Milestone2.products WHERE name = ?`, [name]);
+        const [getOneProduct] = yield dbConnection_1.DB.promise().query(`SELECT * FROM railway.products WHERE name = ?`, [name]);
         if (getOneProduct.length === 0) {
             res.status(400).json((0, errorHandling_1.errorHandling)(null, "Product doesn't exist...!!"));
             return;
@@ -83,7 +83,7 @@ const getOneProductName = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
     catch (error) {
         console.error(error);
-        res.status(500).json((0, errorHandling_1.errorHandling)(null, "Can't Product Data...!! Internal Error!"));
+        res.status(500).json((0, errorHandling_1.errorHandling)(null, "Can't Get Product Data...!! Internal Error!"));
     }
 });
 // delete product

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { DBLocal } from '../config/dbConnection';
+import { DB } from '../config/dbConnection';
 import { errorHandling } from './errorHandling';
 import bcrypt from 'bcrypt'
 import jwt, { Secret } from 'jsonwebtoken'
@@ -11,11 +11,11 @@ const registerUser = async (req: Request, res: Response) => {
     try {
         const { username, password, role } =  req.body;
         const hashedPass = await bcrypt.hash(password, 10)
-        const [existingUser] = await DBLocal.promise().query(`SELECT * FROM week11Milestone2.users WHERE username = ?`, [username]) as RowDataPacket[];
+        const [existingUser] = await DB.promise().query(`SELECT * FROM railway.users WHERE username = ?`, [username]) as RowDataPacket[];
         
         if (existingUser.length === 0) {
-            const newUser = await DBLocal.promise().query(
-            `INSERT INTO week11Milestone2.users (username, password, role) VALUES (?, ?, ?)`,
+            const newUser = await DB.promise().query(
+            `INSERT INTO railway.users (username, password, role) VALUES (?, ?, ?)`,
             [username, hashedPass, 'cust']);
             res.status(200).json(errorHandling(newUser, null));
         } else {
@@ -33,7 +33,7 @@ const registerUser = async (req: Request, res: Response) => {
 const loginUser = async (req: Request, res: Response) => {
     try {
         const { username, password } = req.body
-        const existingUser = await DBLocal.promise().query("SELECT * FROM week11Milestone2.users WHERE username = ?", [username]) as RowDataPacket[];
+        const existingUser = await DB.promise().query("SELECT * FROM railway.users WHERE username = ?", [username]) as RowDataPacket[];
         const user = existingUser[0][0]
         console.log(user, "password:", user.password)
         
@@ -56,7 +56,7 @@ const loginUser = async (req: Request, res: Response) => {
 // Get All User data (Cust, Staff, Admin) ===> Admin Only!
 const getAllUser = async (req: Request, res: Response) => {
     try {
-        const allUser = await DBLocal.promise().query('SELECT * FROM week11Milestone2.users')
+        const allUser = await DB.promise().query('SELECT * FROM railway.users')
 
         if (!allUser) {
             res.status(400).json(errorHandling(null, "User Data Unavailable..."));
@@ -77,8 +77,8 @@ const updateUser = async (req: Request, res: Response) => {
         const checkUsername = req.params.username
         const { name, address } = req.body
         if ((role !== "staff" && role !== "admin") && username === checkUsername) {
-            const updateData = await DBLocal.promise().query(`
-                UPDATE week11Milestone2.users
+            const updateData = await DB.promise().query(`
+                UPDATE railway.users
                 SET name = ?, address = ?
                 WHERE username = ?`,
                 [name, address, username]);
@@ -87,8 +87,8 @@ const updateUser = async (req: Request, res: Response) => {
                 message: "User Data Updated Successfully",
                 data: updateData}, null));
         } else if (role == "staff" || role == "admin") {
-            const updateData = await DBLocal.promise().query(`
-                UPDATE week11Milestone2.users
+            const updateData = await DB.promise().query(`
+                UPDATE railway.users
                 SET name = ?, address = ?
                 WHERE username = ?`,
                 [name, address, username])

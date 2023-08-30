@@ -22,9 +22,9 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     try {
         const { username, password, role } = req.body;
         const hashedPass = yield bcrypt_1.default.hash(password, 10);
-        const [existingUser] = yield dbConnection_1.DBLocal.promise().query(`SELECT * FROM week11Milestone2.users WHERE username = ?`, [username]);
+        const [existingUser] = yield dbConnection_1.DB.promise().query(`SELECT * FROM railway.users WHERE username = ?`, [username]);
         if (existingUser.length === 0) {
-            const newUser = yield dbConnection_1.DBLocal.promise().query(`INSERT INTO week11Milestone2.users (username, password, role) VALUES (?, ?, ?)`, [username, hashedPass, 'cust']);
+            const newUser = yield dbConnection_1.DB.promise().query(`INSERT INTO railway.users (username, password, role) VALUES (?, ?, ?)`, [username, hashedPass, 'cust']);
             res.status(200).json((0, errorHandling_1.errorHandling)(newUser, null));
         }
         else {
@@ -41,7 +41,7 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { username, password } = req.body;
-        const existingUser = yield dbConnection_1.DBLocal.promise().query("SELECT * FROM week11Milestone2.users WHERE username = ?", [username]);
+        const existingUser = yield dbConnection_1.DB.promise().query("SELECT * FROM railway.users WHERE username = ?", [username]);
         const user = existingUser[0][0];
         console.log(user, "password:", user.password);
         const passwordCheck = yield bcrypt_1.default.compare(password, user.password);
@@ -64,7 +64,7 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 // Get All User data (Cust, Staff, Admin) ===> Admin Only!
 const getAllUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const allUser = yield dbConnection_1.DBLocal.promise().query('SELECT * FROM week11Milestone2.users');
+        const allUser = yield dbConnection_1.DB.promise().query('SELECT * FROM railway.users');
         if (!allUser) {
             res.status(400).json((0, errorHandling_1.errorHandling)(null, "User Data Unavailable..."));
         }
@@ -83,8 +83,8 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const checkUsername = req.params.username;
         const { name, address } = req.body;
         if ((role !== "staff" && role !== "admin") && username === checkUsername) {
-            const updateData = yield dbConnection_1.DBLocal.promise().query(`
-                UPDATE week11Milestone2.users
+            const updateData = yield dbConnection_1.DB.promise().query(`
+                UPDATE railway.users
                 SET name = ?, address = ?
                 WHERE username = ?`, [name, address, username]);
             res.status(200).json((0, errorHandling_1.errorHandling)({
@@ -93,8 +93,8 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             }, null));
         }
         else if (role == "staff" || role == "admin") {
-            const updateData = yield dbConnection_1.DBLocal.promise().query(`
-                UPDATE week11Milestone2.users
+            const updateData = yield dbConnection_1.DB.promise().query(`
+                UPDATE railway.users
                 SET name = ?, address = ?
                 WHERE username = ?`, [name, address, username]);
             res.status(200).json((0, errorHandling_1.errorHandling)({

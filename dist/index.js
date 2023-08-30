@@ -12,24 +12,24 @@ const app = (0, express_1.default)();
 const port = process.env.PORT;
 app.use(express_1.default.json());
 // DB Connection (Railway)
-// DB.connect( function () {
-//     if (DB) {
-//         console.log("Railway Connection Succeed");
-//     } else {
-//         console.log("Railway Connection Failed");
-//     }
-// }),
-// DB Connection (Local)
-dbConnection_1.DBLocal.connect(function () {
-    if (dbConnection_1.DBLocal) {
-        console.log("Localhost Connection Succeed");
+dbConnection_1.DB.connect(function () {
+    if (dbConnection_1.DB) {
+        console.log("Railway Connection Succeed");
     }
     else {
-        console.log("Localhost Connection Failed");
+        console.log("Railway Connection Failed");
     }
-});
-// insert Super User / Admin account to Database.. (One time Use)
-(0, adminConfig_1.default)();
+}),
+    // DB Connection (Local)
+    // DBLocal.connect( function () {
+    //     if (DBLocal) {
+    //         console.log("Localhost Connection Succeed");
+    //     } else {
+    //         console.log("Localhost Connection Failed");
+    //     }
+    // })
+    // insert Super User / Admin account to Database.. (One time Use)
+    (0, adminConfig_1.default)();
 // router
 app.use(mainRouter_1.default);
 app.listen(port, () => {

@@ -3,12 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DBLocal = void 0;
+exports.DBLocal = exports.DB = void 0;
 const mysql2_1 = __importDefault(require("mysql2"));
 const dbConfig_1 = require("./dbConfig");
 require("dotenv/config");
 // railway
-// export const DB = mysql.createConnection(`${DBConfig.URL}`)
+exports.DB = mysql2_1.default.createConnection(`${dbConfig_1.DBConfig.URL}`);
 // local
 exports.DBLocal = mysql2_1.default.createConnection({
     host: dbConfig_1.DBConfigLocal.HOST,

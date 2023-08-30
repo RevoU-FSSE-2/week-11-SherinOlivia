@@ -3,7 +3,7 @@ import { DBConfig, DBConfigLocal } from './dbConfig'
 import 'dotenv/config'
 
 // railway
-// export const DB = mysql.createConnection(`${DBConfig.URL}`)
+export const DB = mysql.createConnection(`${DBConfig.URL}`)
 
 // local
 export const DBLocal = mysql.createConnection({

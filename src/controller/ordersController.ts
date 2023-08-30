@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { DBLocal } from '../config/dbConnection';
+import { DB } from '../config/dbConnection';
 import { errorHandling } from './errorHandling';
 import bcrypt from 'bcrypt'
 import jwt, { Secret } from 'jsonwebtoken'
@@ -10,11 +10,11 @@ import { RowDataPacket } from 'mysql2';
 const createNewOrder = async (req: Request, res: Response) => {
     try {
         const { cust_name, product_name, order_qty } =  req.body;
-        const [newOrder] = await DBLocal.promise().query(`INSERT INTO week11Milestone2.orders (cust_name, product_name, order_qty, total, status, order_datetime, isDeleted)
+        const [newOrder] = await DB.promise().query(`INSERT INTO week11Milestone2.orders (cust_name, product_name, order_qty, total, status, order_datetime, isDeleted)
         VALUES (?, ?, ?, (SELECT price FROM week11Milestone2.products WHERE name = ?) * ?, ?, ?, ?)`,
         [cust_name, product_name, order_qty, product_name, order_qty, 'pending', new Date(), '0']) as RowDataPacket[];
         
-       const [createdOrder] = await DBLocal.promise().query(`SELECT * FROM week11Milestone2.orders WHERE id = ?`,
+       const [createdOrder] = await DB.promise().query(`SELECT * FROM week11Milestone2.orders WHERE id = ?`,
         [newOrder.insertId]) as RowDataPacket[];
         
         res.status(200).json(errorHandling(createdOrder, null));
@@ -30,11 +30,11 @@ const updateOrder = async (req: Request, res: Response) => {
     const {status} = req.body
 
     try {
-        const checkId = await DBLocal.promise().query(`SELECT * FROM week11Milestone2.orders WHERE id = ?`,
+        const checkId = await DB.promise().query(`SELECT * FROM railway.orders WHERE id = ?`,
         [id]) as RowDataPacket[]
 
         if (checkId) {
-            await DBLocal.promise().query(`UPDATE week11Milestone2.orders SET status = ? WHERE id = ?`,
+            await DB.promise().query(`UPDATE railway.orders SET status = ? WHERE id = ?`,
             [status, id])
 
             res.status(200).json(errorHandling(checkId, null));
