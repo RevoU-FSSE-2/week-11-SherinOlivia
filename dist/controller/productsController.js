@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getOneProductId = exports.getAllProduct = exports.updateProduct = exports.createNewProduct = void 0;
 const dbConnection_1 = require("../config/dbConnection");
 const errorHandling_1 = require("./errorHandling");
 // Create new Product
@@ -31,18 +32,19 @@ const createNewProduct = (req, res) => __awaiter(void 0, void 0, void 0, functio
         res.status(500).json((0, errorHandling_1.errorHandling)(null, "Can't create new product...!! Internal Error!"));
     }
 });
+exports.createNewProduct = createNewProduct;
 // Update Product Qty & Price
 const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const name = req.params.name;
+        const id = req.params.id;
         const { qty, price } = req.body;
-        const [existingProduct] = yield dbConnection_1.DB.promise().query(`SELECT * FROM railway.products WHERE name = ?`, [name]);
+        const [existingProduct] = yield dbConnection_1.DB.promise().query(`SELECT * FROM railway.products WHERE id = ?`, [id]);
         if (existingProduct.length === 0) {
             res.status(400).json((0, errorHandling_1.errorHandling)(null, "Product doesn't exist...!!"));
             return;
         }
         else {
-            yield dbConnection_1.DB.promise().query(`UPDATE railway.products SET qty = ?, price = ? WHERE name = ?`, [qty, price, name]);
+            yield dbConnection_1.DB.promise().query(`UPDATE railway.products SET qty = ?, price = ? WHERE id = ?`, [qty, price, id]);
             res.status(200).json((0, errorHandling_1.errorHandling)(existingProduct, null));
         }
     }
@@ -51,6 +53,7 @@ const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(500).json((0, errorHandling_1.errorHandling)(null, "Can't Update Product...!! Internal Error!"));
     }
 });
+exports.updateProduct = updateProduct;
 //  get all Product Data
 const getAllProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -68,11 +71,12 @@ const getAllProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(500).json((0, errorHandling_1.errorHandling)(null, "Can't Get All Product Data...!! Internal Error!"));
     }
 });
-// get product by name
-const getOneProductName = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getAllProduct = getAllProduct;
+// get product by id
+const getOneProductId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const name = req.params.name;
-        const [getOneProduct] = yield dbConnection_1.DB.promise().query(`SELECT * FROM railway.products WHERE name = ?`, [name]);
+        const id = req.params.id;
+        const [getOneProduct] = yield dbConnection_1.DB.promise().query(`SELECT * FROM railway.products WHERE id = ?`, [id]);
         if (getOneProduct.length === 0) {
             res.status(400).json((0, errorHandling_1.errorHandling)(null, "Product doesn't exist...!!"));
             return;
@@ -86,6 +90,4 @@ const getOneProductName = (req, res) => __awaiter(void 0, void 0, void 0, functi
         res.status(500).json((0, errorHandling_1.errorHandling)(null, "Can't Get Product Data...!! Internal Error!"));
     }
 });
-// delete product
-const productsController = { createNewProduct, updateProduct, getAllProduct, getOneProductName };
-exports.default = productsController;
+exports.getOneProductId = getOneProductId;
