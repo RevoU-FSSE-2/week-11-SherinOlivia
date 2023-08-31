@@ -1,30 +1,24 @@
 import express from 'express'
 const orderrouter = express.Router()
-// import ordersController from '../controller/ordersController';
+import { createNewOrder, updateOrder, getAllOrders, getAllCustOrders, deleteOrder, getOrderHistory } from '../controller/ordersController';
 import authorMiddleware from '../middleware/authorizationMiddleware'
 
-// Get Orders Data (users can only see their own)
-// orderrouter.get('/', ordersController.getAllOrders);
-
-// Get All Order Data by cust name ===> Staff & Admin Only!
-// orderrouter.get('/user', authorMiddleware({ roles: ['staff', 'admin'] }), ordersController.getAllCustOrders);
-
-// Get One Order Data by id
-// orderrouter.get('/:id', authorMiddleware({ roles: ['staff', 'admin'] }), ordersController.getOneOrder);
-
 // Create new Order
-// orderrouter.post('/new', ordersController.createNewOrder);
+orderrouter.post('/new', createNewOrder);
 
 // Update Order status by id (Completed / Cancelled) ===> Staff & Admin Only!
-// orderrouter.patch('/update/:id', authorMiddleware({ roles: ['staff', 'admin'] }), ordersController.updateOrder);
+orderrouter.patch('/update/:id', authorMiddleware(['staff','admin']), updateOrder);
 
-// Get All Completed Order 
-// orderrouter.get('/completed', ordersController.getCompletedOrder);
-
-// Get All Completed Order  ===> Staff & Admin Only!
-// orderrouter.get('/cancelled', authorMiddleware({ roles: ['staff', 'admin'] }), ordersController.getCancelledOrder);
+// soft delete order
+orderrouter.delete('/delete/:id', deleteOrder);
 
 // Get All Order History ===> Admin Only!
-// orderrouter.get('/history', authorMiddleware({ roles: ['admin'] }), ordersController.getOrderHistory);
+orderrouter.get('/history', authorMiddleware(['admin']), getOrderHistory);
 
-// export default orderrouter
+// Get All Order Data by cust id ===> Staff & Admin Only!
+orderrouter.get('/:id', authorMiddleware(['staff','admin']), getAllCustOrders);
+
+// Get Orders Data (users can only see their own)
+orderrouter.get('/', getAllOrders);
+
+export default orderrouter
