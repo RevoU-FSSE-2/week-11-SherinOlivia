@@ -93,7 +93,7 @@ const updateUser = async (req: Request, res: Response) => {
         const checkId = req.params.id
         const { name, address } = req.body
 
-        if ((role !== "staff" && role !== "admin") && id === checkId) {
+        if ((role !== "staff" && role !== "admin") && id == checkId) {
             await DB.promise().query(`
                 UPDATE railway.users
                 SET name = ?, address = ?
@@ -103,6 +103,7 @@ const updateUser = async (req: Request, res: Response) => {
             const updatedData = await DB.promise().query(`
                 SELECT * FROM railway.users
                 WHERE id = ?`,[checkId]);
+
 
             res.status(200).json(errorHandling({
                 message: "User Data Updated Successfully",
