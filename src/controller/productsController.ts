@@ -32,9 +32,9 @@ const createNewProduct = async (req: Request, res: Response) => {
 
  const updateProduct = async (req: Request, res: Response) => {
     try {
-        const name = req.params.name
+        const id = req.params.id
         const { qty, price } = req.body
-        const [existingProduct] = await DB.promise().query(`SELECT * FROM railway.products WHERE name = ?`, [name]) as RowDataPacket[];
+        const [existingProduct] = await DB.promise().query(`SELECT * FROM railway.products WHERE id = ?`, [id]) as RowDataPacket[];
         
         if (existingProduct.length === 0) {
             res.status(400).json(errorHandling(null, "Product doesn't exist...!!"));
@@ -42,8 +42,8 @@ const createNewProduct = async (req: Request, res: Response) => {
 
         } else {
             await DB.promise().query(
-            `UPDATE railway.products SET qty = ?, price = ? WHERE name = ?`,
-            [qty, price, name]);
+            `UPDATE railway.products SET qty = ?, price = ? WHERE id = ?`,
+            [qty, price, id]);
             res.status(200).json(errorHandling(existingProduct, null));
         }
     } catch (error) {
@@ -71,13 +71,13 @@ const createNewProduct = async (req: Request, res: Response) => {
     }
  }
 
-// get product by name
+// get product by id
 
-const getOneProductName = async (req: Request, res: Response) => {
+const getOneProductId = async (req: Request, res: Response) => {
     try {
-        const name = req.params.name
+        const id = req.params.id
 
-        const [getOneProduct] = await DB.promise().query(`SELECT * FROM railway.products WHERE name = ?`, [name]) as RowDataPacket[];
+        const [getOneProduct] = await DB.promise().query(`SELECT * FROM railway.products WHERE id = ?`, [id]) as RowDataPacket[];
         if (getOneProduct.length === 0) {
             res.status(400).json(errorHandling(null, "Product doesn't exist...!!"));
             return
@@ -90,11 +90,5 @@ const getOneProductName = async (req: Request, res: Response) => {
     }
 }
 
-// delete product
+export {createNewProduct, updateProduct, getAllProduct, getOneProductId }
 
-
-
-
-const productsController = {createNewProduct, updateProduct, getAllProduct, getOneProductName}
-
-export default productsController
