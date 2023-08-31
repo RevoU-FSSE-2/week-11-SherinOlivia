@@ -1,0 +1,705 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: "ROO's Order & Inventory Tracker"
+
+servers:
+- url: http://localhost:5250
+  description: Localhost Link for Development
+# - url: https://week11sh-order-and-inventory-tracker.up.railway.app/
+#   description: Live link for Production
+
+tags:
+  - name: Home
+    description: Homepage/Landing Page
+  - name: Users
+    description: User-related operations
+  - name: Products
+    description: Product-related operations
+  - name: Orders
+    description: Order-related operations
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Bearer in JWT Format
+
+paths:
+  /:
+    get:
+      tags:
+      - Home
+      summary: Homepage/Landing Page
+      responses:
+        '200':
+          description: Successfully reached Project Landing Page
+          content:
+            application/json:
+              example:
+                success: true
+                message: Hello, this is Sherin Olivia's Milestone Project 2 (Week 11)!
+
+  /api/users/register:
+    post:
+      tags:
+      - Users
+      summary: Register New User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  minLength: 3
+                  pattern: "^(?=.*[^\\s]).{3,}$"
+                  description: User's username
+                password:
+                  type: string
+                  minLength: 8
+                  pattern: "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]+$"
+                  description: User's password
+                role:
+                  type: string
+                  enum:
+                    - cust
+                    - staff
+                    - admin
+      responses:
+          '200':
+            description: User successfully registered
+            content:
+              application/json:
+                example:
+                  message: User successfully registered
+                  data:
+                    username: hazell
+                    role: cust
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                example:
+                  error: Bad Request!! Password / Username doesn't meet requirements!
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                example:
+                  error: Invalid Register Request..!!
+  
+  /api/users/login:
+    post:
+      tags:
+      - Users
+      summary: Login User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+          '200':
+            description: User login
+            content:
+              application/json:
+                example:
+                  message: '"hazell" Login Successfully as "cust"'
+                  data:
+                    username: hazell
+                    role: cust
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                example:
+                  error: Bad Request!! Account not Found!
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                example:
+                  error: Invalid Login Request..!!
+          
+  /api/users/cust:
+    get:
+      tags:
+      - Users
+      summary: Get All Cust Data
+      security:
+        - bearerAuth: []
+        - staff: []
+      responses:
+          '200':
+            description: Cust Data Successfully Retrieved
+            content:
+              application/json:
+                example:
+                  message: Cust Data Successfully Retrieved
+                  data:
+                    username: hazell
+                    name: Lia
+                    address: Malang
+                    role: cust
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                example:
+                  error: Bad Request!! Failed to Retrieve Cust Data
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                example:
+                  error: Invalid Data Request!!
+
+
+  /api/users/update/{id}:
+    patch:
+      summary: Update name & address
+      tags:
+      - Users
+      security:
+        - bearerAuth: []
+        - cust: []
+        - staff: []
+        - admin: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                address:
+                  type: string
+      responses:
+          '200':
+            description: Successful User data update (name & address)
+            content:
+              application/json:
+                example:
+                  message: User data Updated Successfully
+                  data:
+                    username: hazell
+                    name: Lia
+                    address: Malang
+                    role: cust
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                example:
+                  error: Bad Request!! Account not Found!
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                example:
+                  error: Invalid Update Request..!!
+
+  /api/users:
+    get:
+      summary: Get All User Data
+      tags:
+      - Users
+      security:
+        - bearerAuth: []
+        - admin: []
+      responses:
+          '200':
+            description: User Data Successfully Retrieved
+            content:
+              application/json:
+                example:
+                  message: User Data Successfully Retrieved
+                  data:
+                  - username: staffzoya
+                    name: Zoya
+                    address: Syndicate
+                    role: staff
+                  - username: hazell
+                    name: Lia
+                    address: Malang
+                    role: cust
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                example:
+                  error: Bad Request!! Failed to Retrieve User Data
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                example:
+                  error: Invalid User Request!
+
+# ====================== PRODUCTS ======================
+
+  /api/products/new:
+    post:
+      summary: Create New Product
+      tags:
+      - Products
+      security:
+        - bearerAuth: []
+        - staff: []
+        - admin: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                qty:
+                  type: integer
+                price:
+                  type: integer
+      responses:
+          '200':
+            description: Successful New Product Listing
+            content:
+              application/json:
+                example:
+                  message: New Product Successfully listed!
+                  data:
+                    name: Chocolate
+                    qty: "5"
+                    price: "12000"
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                example:
+                  error: Bad Request!! Product already Listed!!
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                example:
+                  error: Invalid Product Listing..!!
+
+  /api/products/update/{productId}:
+    patch:
+      summary: Update Product Qty & Price
+      tags:
+      - Products
+      security:
+        - bearerAuth: []
+        - staff: []
+        - admin: []
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                qty:
+                  type: integer
+                price:
+                  type: integer
+      responses:
+          '200':
+            description: Successful Product Update
+            content:
+              application/json:
+                example:
+                  message: Product Stock & Price Successfully Updated!
+                  data:
+                    name: Chocolate
+                    qty: "15"
+                    price: "15000"
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                example:
+                  error: Bad Request!! Product not Found!!
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                example:
+                  error: Invalid Product Update..!!
+
+  /api/products/{productId}:
+    get:
+      summary: Get One Product (by productId)
+      tags:
+      - Products
+      security:
+        - bearerAuth: []
+        - staff: []
+        - admin: []
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+          '200':
+            description: Successful Product Retrieval
+            content:
+              application/json:
+                example:
+                  message: Product Successfully Retrieved!
+                  data:
+                    name: Chocolate
+                    qty: "15"
+                    price: "15000"                 
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                example:
+                  error: Bad Request!! Product not Found!!
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                example:
+                  error: Invalid Product Request..!!
+
+  /api/products/:
+    get:
+      summary: All Product
+      tags:
+      - Products
+      responses:
+          '200':
+            description: Successful Product List Retrieval
+            content:
+              application/json:
+                example:
+                  message: List of Products Successfully Retrieved!
+                  data:
+                  - name: Chocolate
+                    qty: "15"
+                    price: "15000" 
+                  - name: icecream
+                    qty: "5"
+                    price: "5000" 
+                  - name: kwetiau
+                    qty: "1"
+                    price: "25000" 
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                example:
+                  error: Bad Request!! Product not Found!!
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                example:
+                  error: Invalid Product Request..!!
+# ====================== ORDERS ======================
+
+  /api/orders/new:
+    post:
+      summary: Create New Order
+      tags:
+      - Orders
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                custId:
+                  type: integer
+                product_name:
+                  type: string
+                order_qty:
+                  type: integer
+      responses:
+          '200':
+            description: Successful Order Request
+            content:
+              application/json:
+                example:
+                  message: Order Request Successfully created!
+                  data:
+                    status: pending
+                    username: hazell
+                    name: Lia
+                    address: Malang
+                    product_name: Chocolate
+                    order_qty: "1"
+                    total: "15000"
+                    order_datetime: "2023-08-31T01:48:59.000Z"
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                example:
+                  error: Bad Request!! Order Request Failed!
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                example:
+                  error: Invalid Order Request..!!
+
+  /api/orders/update/{orderId}:
+    patch:
+      summary: Update Order Status
+      tags:
+      - Orders
+      security:
+        - bearerAuth: []
+        - staff: []
+        - admin: []
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                  - completed
+                  - cancelled
+      responses:
+          '200':
+            description: Successful Order Status Update
+            content:
+              application/json:
+                example:
+                  message: Order Status Successfully updated!
+                  data:
+                    status: completed
+                    custId: "16"
+                    username: hazell
+                    name: Lia
+                    address: Malang
+                    product_name: Chocolate
+                    order_qty: "1"
+                    total: "15000"
+                    order_datetime: "2023-08-31T01:48:59.000Z"
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                example:
+                  error: Bad Request!! Order Status Update Failed! Pending Order Not Found!
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                example:
+                  error: Invalid Order Status Update..!!
+
+  /api/orders/{orderId}:
+    delete:
+      summary: SoftDelete Order
+      tags:
+      - Orders
+      security:
+        - bearerAuth: []
+        - cust: []
+        - staff: []
+        - admin: []
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+          '200':
+            description: Successfully Deleted Order Request
+            content:
+              application/json:
+                example:
+                  message: Order Request Successfully Deleted!
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                example:
+                  error: Bad Request!! Order Delete Failed! Order Not Found!
+          '500':
+            description: Internal server error
+            content:
+              application/json:
+                example:
+                  error: Invalid Delete Request..!!
+
+  /api/orders/history:
+    get:
+      summary: Get All Orders (Including Deleted Orders)
+      tags:
+      - Orders
+      security:
+        - bearerAuth: []
+        - admin: []
+      responses:
+          '200':
+            description: Order History Successful Retrieval
+            content:
+              application/json:
+                example:
+                  message: Order History Successfully Retrieved
+                  data:
+                  - status: completed
+                    name: Lia
+                    address: Malang
+                    product_name: Chocolate
+                    order_qty: "1"
+                    total: "15000"
+                    datetime: "2023-08-31T01:48:59.000Z"
+                  - status: cancelled
+                    name: Lia
+                    address: Malang
+                    product_name: icecream
+                    order_qty: "2"
+                    total: "10000"
+                    datetime: "2023-08-31T01:48:59.000Z"
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                example:
+                  error: Bad Request!! Failed to Retrieve Cust Data
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                example:
+                  error: Invalid Data Request!!
+
+  /api/orders/{custId}:
+    get:
+      summary: Get All Orders Data by Cust Id(That's Not Deleted..)
+      tags:
+      - Orders
+      security:
+        - bearerAuth: []
+        - staff: []
+        - admin: []
+      parameters:
+        - name: custId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+          '200':
+            description: Successful Retrieval of Order Requests by Cust Id
+            content:
+              application/json:
+                example:
+                  message: Order List Successfully Retrieved
+                  data:
+                  - status: completed
+                    name: Lia
+                    address: Malang
+                    product_name: Chocolate
+                    order_qty: "1"
+                    total: "15000"
+                    datetime: "2023-08-31T01:48:59.000Z"
+                  - status: pending
+                    name: Lia
+                    address: Malang
+                    product_name: icecream
+                    order_qty: "1"
+                    total: "5000"
+                    datetime: "2023-08-31T04:18:13.000Z"
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                example:
+                  error: Bad Request!! Failed to Retrieve Order Data
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                example:
+                  error: Invalid Data Request!!
+
+  /api/orders:
+    get:
+      summary: Get All Orders (That's Not Deleted..)
+      tags:
+      - Orders
+      security:
+        - bearerAuth: []
+        - cust: []
+        - staff: []
+        - admin: []
+      responses:
+          '200':
+            description: Successful Retrieval of Order Requests
+            content:
+              application/json:
+                example:
+                  message: Order List Successfully Retrieved
+                  data:
+                    status: completed
+                    name: Lia
+                    address: Malang
+                    product_name: Chocolate
+                    order_qty: "1"
+                    total: "15000"
+                    datetime: "2023-08-31T01:48:59.000Z"
+          '400':
+            description: Bad request
+            content:
+              application/json:
+                example:
+                  error: Bad Request!! Failed to Retrieve Cust Data
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                example:
+                  error: Invalid Data Request!!
+
+
+
