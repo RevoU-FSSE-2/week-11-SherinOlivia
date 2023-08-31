@@ -1,0 +1,187 @@
+openapi: 3.0.0
+info:
+  version: "1.0.0"
+  title: "Your API Title"
+paths:
+  /api/users:
+    get:
+      summary: Get All User Data
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+  /api/users/cust:
+    get:
+      summary: Get All Cust Data
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+  /api/users/register:
+    post:
+      summary: Register New User
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+  /api/users/login:
+    post:
+      summary: Login User
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+  /api/users/update/{userId}:
+    patch:
+      summary: Update name & address
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                address:
+                  type: string
+      responses:
+        '200':
+          description: Successful response
+  /api/orders:
+    get:
+      summary: All Orders
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+  /api/orders/new:
+    post:
+      summary: Create New Order
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product_name:
+                  type: string
+                order_qty:
+                  type: integer
+      responses:
+        '200':
+          description: Successful response
+  /api/orders/update/{orderId}:
+    patch:
+      summary: Update Order Status
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+  /api/orders/{orderId}:
+    delete:
+      summary: SoftDelete Order
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+  /api/orders/history:
+    get:
+      summary: All Orders (+deleted)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+  /api/products/:
+    get:
+      summary: All Product
+      responses:
+        '200':
+          description: Successful response
+  /api/products/update/{productId}:
+    patch:
+      summary: Update Product Qty & Price
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                qty:
+                  type: integer
+                price:
+                  type: number
+      responses:
+        '200':
+          description: Successful response
+  /:
+    get:
+      summary: Homepage/Landing Page
+      responses:
+        '200':
+          description: Successful response
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

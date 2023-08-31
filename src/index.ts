@@ -3,11 +3,27 @@ import 'dotenv/config';
 import { DB, DBLocal } from './config/dbConnection';
 import insertAdmin from './config/adminConfig';
 import router from './router/mainRouter';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yaml';
+import * as fs from 'fs';
+import * as OpenApiValidator from 'express-openapi-validator';
 
 const app: Express = express()
 const port = process.env.PORT;
 
+
 app.use(express.json())
+
+const openAPIDoc = './doc/swaggerDoc.yaml'
+const file = fs.readFileSync(openAPIDoc, 'utf-8')
+const swaggerDoc = yaml.parse(file)
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+
+app.use(OpenApiValidator.middleware({
+  apiSpec: openAPIDoc,
+  validateRequests: true,
+}))
 
 // DB Connection (Railway)
 DB.connect( function () {
