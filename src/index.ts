@@ -7,13 +7,17 @@ import swaggerUi from 'swagger-ui-express';
 import yaml from 'yaml';
 import * as fs from 'fs';
 import * as OpenApiValidator from 'express-openapi-validator';
+import cors from 'cors';
 
 const app: Express = express()
 const port = process.env.PORT;
 
+// cors
+app.use(cors());
 
 app.use(express.json())
 
+// swagger
 const openAPIDoc = './doc/swaggerDoc.yaml'
 const file = fs.readFileSync(openAPIDoc, 'utf-8')
 const swaggerDoc = yaml.parse(file)
@@ -52,3 +56,4 @@ app.use(router)
 app.listen(port, () => {
   console.log(`Server is running on port:${port}`)
 })
+
