@@ -100,7 +100,7 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const { role, id } = req.user;
         const checkId = req.params.id;
         const { name, address } = req.body;
-        if ((role !== "staff" && role !== "admin") && id === checkId) {
+        if ((role !== "staff" && role !== "admin") && id == checkId) {
             yield dbConnection_1.DB.promise().query(`
                 UPDATE railway.users
                 SET name = ?, address = ?

@@ -100,7 +100,7 @@ exports.getAllOrders = getAllOrders;
 // get orders by cust id ===> staff & admin only!!
 const getAllCustOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userId = req.params.id;
+        const userId = req.params.custId;
         const getCustOrders = yield dbConnection_1.DB.promise().query(`
         SELECT o.id, o.status, o.custId, u.name, u.address, o.product_name, o.order_qty, o.total, o.order_datetime FROM railway.orders as o LEFT JOIN railway.users as u ON o.custId = u.id
         WHERE o.CustId = ? AND isDeleted = ?`, [userId, '0']);
