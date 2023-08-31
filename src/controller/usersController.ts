@@ -14,10 +14,12 @@ const registerUser = async (req: Request, res: Response) => {
         const [existingUser] = await DB.promise().query(`SELECT * FROM railway.users WHERE username = ?`, [username]) as RowDataPacket[];
         
         if (existingUser.length === 0) {
-            const newUser = await DB.promise().query(
+            const [newUser] = await DB.promise().query(
             `INSERT INTO railway.users (username, password, role) VALUES (?, ?, ?)`,
-            [username, hashedPass, 'cust']);
-            res.status(200).json(errorHandling(newUser, null));
+            [username, hashedPass, 'cust']) as RowDataPacket[];
+
+            const getNewUser = await DB.promise().query(`SELECT * FROM railway.users WHERE id = ?`, [newUser.insertId]);
+            res.status(200).json(errorHandling(getNewUser[0], null));
         } else {
             res.status(400).json(errorHandling(null, "Username already exist...!!"));
             return
@@ -61,41 +63,66 @@ const getAllUser = async (req: Request, res: Response) => {
         if (!allUser) {
             res.status(400).json(errorHandling(null, "User Data Unavailable..."));
         } else {
-            res.status(200).json(errorHandling(allUser, null));
+            res.status(200).json(errorHandling(allUser[0], null));
         }
     } catch (error) {
+        console.error(error)
         res.status(500).json(errorHandling(null, "User Data Retrieval Failed...!!"));
     }
 }
+
+// get all cust data (cust) ===> Staff & Admin only!
+const getAllCust = async (req: Request, res: Response) => {
+    try {
+        const usersData = await DB.promise().query('SELECT * FROM railway.users WHERE role = ?',["cust"]) as RowDataPacket[]
+    
+        res.status(200).json(errorHandling(usersData[0], null));
+    } catch (error) {
+        console.error(error)
+        res.status(500).json(errorHandling(null, "User Data Retrieval Failed...!!"));
+    }
+}
+
 
 // Patch/Update name & address
 
 const updateUser = async (req: Request, res: Response) => {
     try {
-        const { role, username } = (req as any).user;
+        const { role, id } = (req as any).user;
 
-        const checkUsername = req.params.username
+        const checkId = req.params.id
         const { name, address } = req.body
-        if ((role !== "staff" && role !== "admin") && username === checkUsername) {
-            const updateData = await DB.promise().query(`
+
+        if ((role !== "staff" && role !== "admin") && id === checkId) {
+            await DB.promise().query(`
                 UPDATE railway.users
                 SET name = ?, address = ?
-                WHERE username = ?`,
-                [name, address, username]);
+                WHERE id = ?`,
+                [name, address, id]);
+
+            const updatedData = await DB.promise().query(`
+                SELECT * FROM railway.users
+                WHERE id = ?`,[checkId]);
 
             res.status(200).json(errorHandling({
                 message: "User Data Updated Successfully",
-                data: updateData}, null));
+                data: updatedData[0]}, null));
         } else if (role == "staff" || role == "admin") {
-            const updateData = await DB.promise().query(`
+            await DB.promise().query(`
                 UPDATE railway.users
                 SET name = ?, address = ?
-                WHERE username = ?`,
-                [name, address, username])
+                WHERE id = ?`,
+                [name, address, checkId])
+
+            const updatedData = await DB.promise().query(`
+                SELECT * FROM railway.users
+                WHERE id = ?`,[checkId]);
 
             res.status(200).json(errorHandling({
                 message: "User Data Updated Successfully",
-                data: updateData}, null));
+                data: updatedData[0]}, null));
+        } else {
+            res.status(400).json(errorHandling(null, "Unauthorized Update...!! Update Failed!!"));
         }
 
     } catch (error) {
@@ -105,6 +132,5 @@ const updateUser = async (req: Request, res: Response) => {
 }
 
 
-const usersController = { registerUser, loginUser, getAllUser, updateUser }
+export { registerUser, loginUser, getAllUser, getAllCust, updateUser }
 
-export default usersController
