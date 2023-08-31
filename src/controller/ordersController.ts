@@ -104,10 +104,10 @@ const getAllOrders = async (req: Request, res: Response) => {
 // get orders by cust id ===> staff & admin only!!
 const getAllCustOrders = async (req: Request, res: Response) => {
     try {
-        const userId = req.params.id
+        const userId = req.params.custId
         const getCustOrders = await DB.promise().query(`
         SELECT o.id, o.status, o.custId, u.name, u.address, o.product_name, o.order_qty, o.total, o.order_datetime FROM railway.orders as o LEFT JOIN railway.users as u ON o.custId = u.id
-        WHERE o.CustId = ? AND isDeleted = ?`,[userId, '0']);
+        WHERE o.CustId = ? AND isDeleted = ?`,[userId, '0']) as RowDataPacket[];
 
         res.status(200).json(errorHandling({
             message: "Cust orders retrieved Successfully",
