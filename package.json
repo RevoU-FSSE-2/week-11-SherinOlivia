@@ -1,7 +1,7 @@
 {
   "name": "week-11-sherinolivia",
   "version": "1.0.0",
-  "description": "Milestone Project 2.0 - Orders & Products Tracker ",
+  "description": "Milestone Project 2.0 - Orders & Inventory Tracker ",
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
