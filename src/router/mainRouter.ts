@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import authenMiddleware from '../middleware/authenticationMiddleware';
-// import orderrouter from './ordersRouter';
+import orderrouter from './ordersRouter';
 import productrouter from './productsRouter';
 import userrouter from './usersRouter';
 
@@ -16,7 +16,7 @@ router.get("/", function (req: Request, res: Response) {
 })
 
 // Router:
-// router.use('/api/orders', authenMiddleware, orderrouter)
+router.use('/api/orders', authenMiddleware, orderrouter)
 router.use('/api/products', productrouter)
 router.use('/api/users', userrouter)
 
