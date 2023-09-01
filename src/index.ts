@@ -17,10 +17,11 @@ app.use(cors());
 
 app.use(express.json())
 
+
 // swagger
 const openAPIDoc = './doc/swaggerDoc.yaml'
 const file = fs.readFileSync(openAPIDoc, 'utf-8')
-const swaggerDoc = yaml.parse(file)
+const swaggerDoc = yaml.parse(file) as object
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 

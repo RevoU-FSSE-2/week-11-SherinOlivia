@@ -6,7 +6,7 @@ info:
 servers:
 - url: http://localhost:5250
   description: Localhost Link for Development
-- url: https://week11sh-order-and-inventory-tracker.up.railway.app/
+- url: https://w11sh-order-and-inventory-tracker.up.railway.app
   description: Live link for Production
 
 tags:
@@ -402,7 +402,7 @@ paths:
                 example:
                   error: Invalid Product Request..!!
 
-  /api/products/:
+  /api/products:
     get:
       summary: All Product
       tags:
