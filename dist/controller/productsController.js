@@ -45,7 +45,8 @@ const updateProduct = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
         else {
             yield dbConnection_1.DB.promise().query(`UPDATE railway.products SET qty = ?, price = ? WHERE id = ?`, [qty, price, id]);
-            res.status(200).json((0, errorHandling_1.errorHandling)(existingProduct, null));
+            const updatedProduct = yield dbConnection_1.DB.promise().query(`SELECT * FROM railway.products WHERE id = ?`, [id]);
+            res.status(200).json((0, errorHandling_1.errorHandling)(updatedProduct[0][0], null));
         }
     }
     catch (error) {
@@ -82,7 +83,7 @@ const getOneProductId = (req, res) => __awaiter(void 0, void 0, void 0, function
             return;
         }
         else {
-            res.status(200).json((0, errorHandling_1.errorHandling)(getOneProduct, null));
+            res.status(200).json((0, errorHandling_1.errorHandling)(getOneProduct[0], null));
         }
     }
     catch (error) {

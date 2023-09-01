@@ -24,14 +24,28 @@ const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const { username, password, role } = req.body;
         const hashedPass = yield bcrypt_1.default.hash(password, 10);
         const [existingUser] = yield dbConnection_1.DB.promise().query(`SELECT * FROM railway.users WHERE username = ?`, [username]);
-        if (existingUser.length === 0) {
-            const [newUser] = yield dbConnection_1.DB.promise().query(`INSERT INTO railway.users (username, password, role) VALUES (?, ?, ?)`, [username, hashedPass, 'cust']);
-            const getNewUser = yield dbConnection_1.DB.promise().query(`SELECT * FROM railway.users WHERE id = ?`, [newUser.insertId]);
-            res.status(200).json((0, errorHandling_1.errorHandling)(getNewUser[0], null));
+        if (req.role = "admin") {
+            console.log(req.role, "<=== test check role");
+            if (existingUser.length === 0) {
+                const [newUser] = yield dbConnection_1.DB.promise().query(`INSERT INTO railway.users (username, password, role) VALUES (?, ?, ?)`, [username, hashedPass, role]);
+                const getNewUser = yield dbConnection_1.DB.promise().query(`SELECT * FROM railway.users WHERE id = ?`, [newUser.insertId]);
+                res.status(200).json((0, errorHandling_1.errorHandling)(getNewUser[0], null));
+            }
+            else {
+                res.status(400).json((0, errorHandling_1.errorHandling)(null, "Username already exist...!!"));
+                return;
+            }
         }
         else {
-            res.status(400).json((0, errorHandling_1.errorHandling)(null, "Username already exist...!!"));
-            return;
+            if (existingUser.length === 0) {
+                const [newUser] = yield dbConnection_1.DB.promise().query(`INSERT INTO railway.users (username, password, role) VALUES (?, ?, ?)`, [username, hashedPass, 'cust']);
+                const getNewUser = yield dbConnection_1.DB.promise().query(`SELECT * FROM railway.users WHERE id = ?`, [newUser.insertId]);
+                res.status(200).json((0, errorHandling_1.errorHandling)(getNewUser[0], null));
+            }
+            else {
+                res.status(400).json((0, errorHandling_1.errorHandling)(null, "Username already exist...!!"));
+                return;
+            }
         }
     }
     catch (error) {
