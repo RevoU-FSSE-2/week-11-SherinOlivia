@@ -7,23 +7,38 @@ import JWT_TOKEN from '../config/jwtConfig'
 import { RowDataPacket } from 'mysql2';
 
 // Register Account (Reminder: default is cust, admin can register staff)
-const registerUser = async (req: Request, res: Response) => {
+const registerUser = async (req: any, res: Response) => {
     try {
         const { username, password, role } =  req.body;
         const hashedPass = await bcrypt.hash(password, 10)
         const [existingUser] = await DB.promise().query(`SELECT * FROM railway.users WHERE username = ?`, [username]) as RowDataPacket[];
-        
-        if (existingUser.length === 0) {
-            const [newUser] = await DB.promise().query(
-            `INSERT INTO railway.users (username, password, role) VALUES (?, ?, ?)`,
-            [username, hashedPass, 'cust']) as RowDataPacket[];
-
-            const getNewUser = await DB.promise().query(`SELECT * FROM railway.users WHERE id = ?`, [newUser.insertId]);
-            res.status(200).json(errorHandling(getNewUser[0], null));
+        if (req.role = "admin") {
+            console.log(req.role, "<=== test check role")
+            if (existingUser.length === 0) {
+                const [newUser] = await DB.promise().query(
+                `INSERT INTO railway.users (username, password, role) VALUES (?, ?, ?)`,
+                [username, hashedPass, role]) as RowDataPacket[];
+    
+                const getNewUser = await DB.promise().query(`SELECT * FROM railway.users WHERE id = ?`, [newUser.insertId]);
+                res.status(200).json(errorHandling(getNewUser[0], null));
+            } else {
+                res.status(400).json(errorHandling(null, "Username already exist...!!"));
+                return
+            }
         } else {
-            res.status(400).json(errorHandling(null, "Username already exist...!!"));
-            return
+            if (existingUser.length === 0) {
+                const [newUser] = await DB.promise().query(
+                `INSERT INTO railway.users (username, password, role) VALUES (?, ?, ?)`,
+                [username, hashedPass, 'cust']) as RowDataPacket[];
+    
+                const getNewUser = await DB.promise().query(`SELECT * FROM railway.users WHERE id = ?`, [newUser.insertId]);
+                res.status(200).json(errorHandling(getNewUser[0], null));
+            } else {
+                res.status(400).json(errorHandling(null, "Username already exist...!!"));
+                return
+            }
         }
+
     } catch (error) {
         console.error(error)
         res.status(500).json(errorHandling(null, "Register User Failed..!! Internal Error!"));
