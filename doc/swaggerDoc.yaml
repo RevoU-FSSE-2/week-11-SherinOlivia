@@ -6,8 +6,8 @@ info:
 servers:
 - url: http://localhost:5250
   description: Localhost Link for Development
-# - url: https://week11sh-order-and-inventory-tracker.up.railway.app/
-#   description: Live link for Production
+- url: https://week11sh-order-and-inventory-tracker.up.railway.app/
+  description: Live link for Production
 
 tags:
   - name: Home
@@ -47,6 +47,10 @@ paths:
       tags:
       - Users
       summary: Register New User
+      description: |
+        - Cust role is the default role when registering new user
+        - Staff role can only be created by admin (need login first)
+        - Admin role is not available for register process.
       requestBody:
         required: true
         content:
@@ -140,6 +144,7 @@ paths:
       security:
         - bearerAuth: []
         - staff: []
+        - admin: []
       responses:
           '200':
             description: Cust Data Successfully Retrieved
@@ -169,6 +174,9 @@ paths:
   /api/users/update/{id}:
     patch:
       summary: Update name & address
+      description: |
+        - Cust can only update their own name and address info
+        - Staff & Admin can update name and address for cust
       tags:
       - Users
       security:
@@ -221,6 +229,8 @@ paths:
   /api/users:
     get:
       summary: Get All User Data
+      description: |
+        - Only Admin can get all user data (because there is admin data).
       tags:
       - Users
       security:
@@ -260,6 +270,8 @@ paths:
   /api/products/new:
     post:
       summary: Create New Product
+      description: |
+        - Only Staff & Admin can create new product.
       tags:
       - Products
       security:
@@ -306,6 +318,8 @@ paths:
   /api/products/update/{productId}:
     patch:
       summary: Update Product Qty & Price
+      description: |
+        - Only Staff & Admin can update Qty & Price.
       tags:
       - Products
       security:
@@ -358,10 +372,6 @@ paths:
       summary: Get One Product (by productId)
       tags:
       - Products
-      security:
-        - bearerAuth: []
-        - staff: []
-        - admin: []
       parameters:
         - name: productId
           in: path
@@ -431,6 +441,9 @@ paths:
   /api/orders/new:
     post:
       summary: Create New Order
+      description: |
+        - Cust can only create orders with their own id (automatically set as default, therefore no need to include custId)
+        - Staff & Admin can create orders for custs (therefore need to input custId)
       tags:
       - Orders
       security:
@@ -480,6 +493,9 @@ paths:
   /api/orders/update/{orderId}:
     patch:
       summary: Update Order Status
+      description: |
+        - Only Staff & Admin can update order status (to completed or cancelled)
+        - If status is already cancelled, then can't be updated anymore. Need to create new order.
       tags:
       - Orders
       security:
@@ -534,9 +550,12 @@ paths:
                 example:
                   error: Invalid Order Status Update..!!
 
-  /api/orders/{orderId}:
+  /api/orders/delete/{orderId}:
     delete:
       summary: SoftDelete Order
+      description: |
+        - Cust can only delete their own orders
+        - Staff & Admin can delete (soft delete) any orders.
       tags:
       - Orders
       security:
@@ -666,6 +685,9 @@ paths:
   /api/orders:
     get:
       summary: Get All Orders (That's Not Deleted..)
+      description: |
+        - Cust can only get their own orders that's not deleted
+        - Staff & Admin can get all orders that's not deleted
       tags:
       - Orders
       security:
