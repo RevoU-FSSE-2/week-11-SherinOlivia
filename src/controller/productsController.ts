@@ -44,7 +44,8 @@ const createNewProduct = async (req: Request, res: Response) => {
             await DB.promise().query(
             `UPDATE railway.products SET qty = ?, price = ? WHERE id = ?`,
             [qty, price, id]);
-            res.status(200).json(errorHandling(existingProduct, null));
+            const updatedProduct = await DB.promise().query(`SELECT * FROM railway.products WHERE id = ?`, [id]) as RowDataPacket[];
+            res.status(200).json(errorHandling(updatedProduct[0][0], null));
         }
     } catch (error) {
         console.error(error)
@@ -82,7 +83,7 @@ const getOneProductId = async (req: Request, res: Response) => {
             res.status(400).json(errorHandling(null, "Product doesn't exist...!!"));
             return
         } else {
-            res.status(200).json(errorHandling(getOneProduct, null));
+            res.status(200).json(errorHandling(getOneProduct[0], null));
         }
     } catch (error) {
         console.error(error)
