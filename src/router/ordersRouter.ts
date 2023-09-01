@@ -7,10 +7,10 @@ import authorMiddleware from '../middleware/authorizationMiddleware'
 orderrouter.post('/new', createNewOrder);
 
 // Update Order status by order id (Completed / Cancelled) ===> Staff & Admin Only!
-orderrouter.patch('/update/:id', authorMiddleware(['staff','admin']), updateOrder);
+orderrouter.patch('/update/:orderId', authorMiddleware(['staff','admin']), updateOrder);
 
 // soft delete order by order id
-orderrouter.delete('/delete/:id', deleteOrder);
+orderrouter.delete('/delete/:orderId', deleteOrder);
 
 // Get All Order History ===> Admin Only!
 orderrouter.get('/history', authorMiddleware(['admin']), getOrderHistory);
