@@ -111,10 +111,10 @@ Update (parameter: orderId):
 <br>
 ## API Endpoints
 <p align="center">
-<a href="https://w11sh-order-and-inventory-tracker.up.railway.app/">w11sh-order-and-inventory-tracker.up.railway.app</a>
+<a href="https://w11sh-order-and-inventory-tracker.up.railway.app/" target="_blank">w11sh-order-and-inventory-tracker.up.railway.app</a> | <a href="https://w11sh.roozone.site/">w11sh.roozone.site</a>
 </p> 
 <p align="center">
-<a href="https://w11sh-order-and-inventory-tracker.up.railway.app/api-docs/">Swagger UI Documentation</a>
+<a href="https://w11sh-order-and-inventory-tracker.up.railway.app/api-docs/" target="_blank">Swagger UI Documentation</a>
 </p>
 
 **USERS**
