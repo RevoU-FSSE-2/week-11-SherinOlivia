@@ -16,7 +16,16 @@ The Main Focus for the project are:
 - Authorization: Role-Based Access Control (RBAC)
 5. Comprehensive API Documentation
 
+## Live/Production link | Roo's Order & Inventory Tracker
+<p align="center">
+<a href="https://w11sh-order-and-inventory-tracker.up.railway.app/">w11sh-order-and-inventory-tracker.up.railway.app</a> | <a href="https://w11sh.roozone.site/">w11sh.roozone.site</a>
+</p> 
+<p align="center">
+<a href="https://w11sh-order-and-inventory-tracker.up.railway.app/api-docs/">Swagger UI Documentation</a>
+</p>
+
 ##  Project Features
+
 - **Theme**: Order & Inventory Tracker
 - **BCrypt** for Password Hashing
 - **JWT** for Authentication and Authorization
@@ -24,6 +33,7 @@ The Main Focus for the project are:
 - **Typescript** as the programming language
 - **MySQL** for the database service
 - **Railway** as the deployment platform
+  
 ## Planning: Diagram
 
 **Business:**
@@ -109,6 +119,7 @@ Update (parameter: orderId):
 }
 ```
 <br>
+
 ## API Endpoints
 <p align="center">
 <a href="https://w11sh-order-and-inventory-tracker.up.railway.app/">w11sh-order-and-inventory-tracker.up.railway.app</a> | <a href="https://w11sh.roozone.site/">w11sh.roozone.site</a>
